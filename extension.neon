@@ -12,6 +12,8 @@ parameters:
     - stubs/Model/Model.stub
     - stubs/Routing/Router.stub
     - stubs/Utility/ClassRegistry.stub
+  bootstrapFiles:
+    - stubs/basics.php
 services:
   - class: PHPStanCakePHP2\ClassComponentsExtension
     tags:
