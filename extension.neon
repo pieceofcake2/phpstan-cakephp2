@@ -9,6 +9,7 @@ parameters:
     schemaPaths:
       - app/Config/Schema/*.php
   stubFiles:
+    - stubs/Model/Model.stub
     - stubs/Routing/Router.stub
     - stubs/Utility.stub
 services:
