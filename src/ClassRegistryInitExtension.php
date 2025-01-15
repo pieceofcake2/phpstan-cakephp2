@@ -50,20 +50,18 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
 
     public function getTypeFromStaticMethodCall(MethodReflection $methodReflection, StaticCall $methodCall, Scope $scope): ?Type
     {
-        $argumentType = $scope->getType($methodCall->getArgs()[0]->value);
+        $type = $scope->getType($methodCall->getArgs()[0]->value);
 
-        if (!$argumentType instanceof ConstantStringType) {
-            return $this->getDefaultType();
-        }
+        foreach ($type->getConstantStrings() as $constantString) {
+            $value = $constantString->getValue();
 
-        $value = $argumentType->getValue();
+            if ($this->reflectionProvider->hasClass($value)) {
+                return new ObjectType($value);
+            }
 
-        if ($this->reflectionProvider->hasClass($value)) {
-            return new ObjectType($value);
-        }
-
-        if ($this->schemaService->hasTable(Inflector::tableize($value))) {
-            return new ObjectType('Model');
+            if ($this->schemaService->hasTable(Inflector::tableize($value))) {
+                return new ObjectType('Model');
+            }
         }
 
         return $this->getDefaultType();
