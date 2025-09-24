@@ -1,9 +1,16 @@
 # PHPStan-CakePHP2
+
+[![GitHub License](https://img.shields.io/github/license/friendsofcake2/phpstan-cakephp2?label=License)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/friendsofcake2/phpstan-cakephp2?label=Packagist)](https://packagist.org/packages/friendsofcake2/phpstan-cakephp2)
+[![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/friendsofcake2/phpstan-cakephp2/php?logo=php&logoColor=%23FFFFFF&label=PHP&labelColor=%23777BB4&color=%23FFFFFF)](https://packagist.org/packages/friendsofcake2/phpstan-cakephp2)
+[![Tests](https://img.shields.io/github/actions/workflow/status/friendsofcake2/phpstan-cakephp2/CI.yml?label=CI)](https://github.com/friendsofcake2/phpstan-cakephp2/actions/workflows/tests.yml)
+[![Codecov](https://img.shields.io/codecov/c/gh/friendsofcake2/phpstan-cakephp2?label=Coverage)](https://codecov.io/gh/friendsofcake2/phpstan-cakephp2)
+
 PHPStan extensions to help test CakePHP 2 projects with PHPStan
 
 ## Requirements
 
-* PHP 7.4
+* PHP 7.4, 8.x
 * phpstan/phpstan 1.9+
 * cakephp/cakephp 2.x
 
