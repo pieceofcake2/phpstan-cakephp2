@@ -2,15 +2,32 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - 'main'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - 'main'
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  build:
+  composer_validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+  phpunit:
     runs-on: ubuntu-latest
 
     strategy:
@@ -32,9 +49,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
 
-      - name: Validate composer.json
-        run: composer validate --strict
-
       - name: Composer get cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
@@ -50,11 +64,53 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Run code quality checks
-        run: composer run-script phpinsights-github
+      - name: Setup problem matchers for PHPUnit
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Run Tests
+        run: ./vendors/bin/phpunit --coverage-clover coverage.xml --log-junit junit.xml --colors=always
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          use_oidc: true
+          file: ./junit.xml
+          flags: php${{ matrix.php-version }}
+          name: PHP ${{ matrix.php-version }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          flags: php${{ matrix.php-version }}
+          name: PHP ${{ matrix.php-version }}
+
+  phpstan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Composer get cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php8.4-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php8.4-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
 
       - name: Run static type analysis
-        run: composer run-script phpstan
-
-      - name: Run test suite
-        run: composer run-script phpunit
+        run: ./vendor/bin/phpstan
