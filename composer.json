@@ -4,11 +4,11 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
-        "cakephp/cakephp": "^2.10.24",
+        "friendsofcake2/cakephp": "^2.10.24",
         "nunomaduro/phpinsights": "^2.7",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^9.6"
@@ -24,15 +24,15 @@
         },
         "classmap": [
             "tests/Feature/classes",
-            "vendor/cakephp/cakephp/lib/Cake/Cache",
-            "vendor/cakephp/cakephp/lib/Cake/Config",
-            "vendor/cakephp/cakephp/lib/Cake/Console/Shell.php",
-            "vendor/cakephp/cakephp/lib/Cake/Core",
-            "vendor/cakephp/cakephp/lib/Cake/Controller",
-            "vendor/cakephp/cakephp/lib/Cake/Event",
-            "vendor/cakephp/cakephp/lib/Cake/Model",
-            "vendor/cakephp/cakephp/lib/Cake/Utility",
-            "vendor/cakephp/cakephp/lib/Cake/View"
+            "vendor/friendsofcake2/cakephp/lib/Cake/Cache",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Config",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Console/Shell.php",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Core",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Controller",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Event",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Model",
+            "vendor/friendsofcake2/cakephp/lib/Cake/Utility",
+            "vendor/friendsofcake2/cakephp/lib/Cake/View"
         ]
     },
     "scripts": {

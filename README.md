@@ -10,9 +10,9 @@ PHPStan extensions to help test CakePHP 2 projects with PHPStan
 
 ## Requirements
 
-* PHP 7.4, 8.x
+* PHP 8.0+
 * phpstan/phpstan 1.9+
-* cakephp/cakephp 2.x
+* friendsofcake2/cakephp 2.x
 
 ## Installation
 

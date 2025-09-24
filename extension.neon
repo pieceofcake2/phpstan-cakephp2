@@ -1,7 +1,7 @@
 parameters:
   ModelBehaviorsExtension:
     behaviorPaths:
-      - vendor/cakephp/cakephp/lib/Cake/Model/Behavior/*.php
+      - vendor/friendsofcake2/cakephp/lib/Cake/Model/Behavior/*.php
       - lib/Cake/Model/Behavior/*.php
       - app/Plugin/*/Model/Behavior/*.php
       - app/Model/Behavior/*.php
