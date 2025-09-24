@@ -1,6 +1,9 @@
 /.idea/
 /phpstan/
 /vendor/
-.phpunit.cache
 composer.lock
 composer.phar
+/phpstan.neon
+/phpunit.xml
+/.phpunit.result.cache
+
