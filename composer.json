@@ -1,16 +1,10 @@
 {
-    "name": "sidz/phpstan-cakephp2",
+    "name": "friendsofcake2/phpstan-cakephp2",
     "description": "An extension to help test CakePHP 2 projects with PHPStan",
     "type": "library",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Oleg Zhulnev",
-            "email": "plbsid@gmail.com"
-        }
-    ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
