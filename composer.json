@@ -1,5 +1,5 @@
 {
-    "name": "friendsofcake2/phpstan-cakephp2",
+    "name": "pieceofcake2/phpstan-cakephp2",
     "description": "An extension to help test CakePHP 2 projects with PHPStan",
     "type": "library",
     "license": "MIT",
@@ -8,10 +8,10 @@
         "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
-        "friendsofcake2/cakephp": "^2.10.24",
         "nunomaduro/phpinsights": "^2.7",
         "phpstan/phpstan-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.6"
+        "phpunit/phpunit": "^9.6",
+        "pieceofcake2/cakephp": "^2.10.24"
     },
     "autoload": {
         "psr-4": {
@@ -24,15 +24,15 @@
         },
         "classmap": [
             "tests/Feature/classes",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Cache",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Config",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Console/Shell.php",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Core",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Controller",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Event",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Model",
-            "vendor/friendsofcake2/cakephp/lib/Cake/Utility",
-            "vendor/friendsofcake2/cakephp/lib/Cake/View"
+            "vendor/pieceofcake2/cakephp/lib/Cake/Cache",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Config",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Console/Shell.php",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Core",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Controller",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Event",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Model",
+            "vendor/pieceofcake2/cakephp/lib/Cake/Utility",
+            "vendor/pieceofcake2/cakephp/lib/Cake/View"
         ]
     },
     "scripts": {

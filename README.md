@@ -1,10 +1,10 @@
 # PHPStan-CakePHP2
 
-[![GitHub License](https://img.shields.io/github/license/friendsofcake2/phpstan-cakephp2?label=License)](LICENSE)
-[![Packagist Version](https://img.shields.io/packagist/v/friendsofcake2/phpstan-cakephp2?label=Packagist)](https://packagist.org/packages/friendsofcake2/phpstan-cakephp2)
-[![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/friendsofcake2/phpstan-cakephp2/php?logo=php&logoColor=%23FFFFFF&label=PHP&labelColor=%23777BB4&color=%23FFFFFF)](https://packagist.org/packages/friendsofcake2/phpstan-cakephp2)
-[![Tests](https://img.shields.io/github/actions/workflow/status/friendsofcake2/phpstan-cakephp2/CI.yml?label=CI)](https://github.com/friendsofcake2/phpstan-cakephp2/actions/workflows/tests.yml)
-[![Codecov](https://img.shields.io/codecov/c/gh/friendsofcake2/phpstan-cakephp2?label=Coverage)](https://codecov.io/gh/friendsofcake2/phpstan-cakephp2)
+[![GitHub License](https://img.shields.io/github/license/pieceofcake2/phpstan-cakephp2?label=License)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/pieceofcake2/phpstan-cakephp2?label=Packagist)](https://packagist.org/packages/pieceofcake2/phpstan-cakephp2)
+[![PHP](https://img.shields.io/packagist/dependency-v/pieceofcake2/phpstan-cakephp2/php?logo=php&logoColor=%23FFFFFF&label=PHP&labelColor=%23777BB4&color=%23FFFFFF)](https://packagist.org/packages/pieceofcake2/phpstan-cakephp2)
+[![Tests](https://img.shields.io/github/actions/workflow/status/pieceofcake2/phpstan-cakephp2/CI.yml?label=CI)](https://github.com/pieceofcake2/phpstan-cakephp2/actions/workflows/tests.yml)
+[![Codecov](https://img.shields.io/codecov/c/gh/pieceofcake2/phpstan-cakephp2?label=Coverage)](https://codecov.io/gh/pieceofcake2/phpstan-cakephp2)
 
 PHPStan extensions to help test CakePHP 2 projects with PHPStan
 
@@ -12,20 +12,20 @@ PHPStan extensions to help test CakePHP 2 projects with PHPStan
 
 * PHP 8.0+
 * phpstan/phpstan 1.9+
-* friendsofcake2/cakephp 2.x
+* pieceofcake2/cakephp 2.x
 
 ## Installation
 
 Installation is best done through composer:
 ```shell
-composer require --dev friendsofcake2/phpstan-cakephp2
+composer require --dev pieceofcake2/phpstan-cakephp2
 ```
 
 You will need to make sure the extension is included in your phpstan config:
 ```yaml
 # phpstan.neon
 includes:
-  - vendor/friendsofcake2/phpstan-cakephp2/extension.neon
+  - vendor/pieceofcake2/phpstan-cakephp2/extension.neon
 ```
 
 If you have behavior classes in odd locations (perhaps in a vendor directory) you will need to add those locations to
