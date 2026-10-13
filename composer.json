@@ -11,7 +11,7 @@
         "nunomaduro/phpinsights": "^2.7",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^9.6",
-        "pieceofcake2/cakephp": "^2.10.24"
+        "pieceofcake2/cakephp": "^2.12"
     },
     "autoload": {
         "psr-4": {
@@ -24,15 +24,15 @@
         },
         "classmap": [
             "tests/Feature/classes",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Cache",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Config",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Console/Shell.php",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Core",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Controller",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Event",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Model",
-            "vendor/pieceofcake2/cakephp/lib/Cake/Utility",
-            "vendor/pieceofcake2/cakephp/lib/Cake/View"
+            "vendor/pieceofcake2/cakephp/src/Cake/Cache",
+            "vendor/pieceofcake2/cakephp/src/Cake/Config",
+            "vendor/pieceofcake2/cakephp/src/Cake/Console/Shell.php",
+            "vendor/pieceofcake2/cakephp/src/Cake/Core",
+            "vendor/pieceofcake2/cakephp/src/Cake/Controller",
+            "vendor/pieceofcake2/cakephp/src/Cake/Event",
+            "vendor/pieceofcake2/cakephp/src/Cake/Model",
+            "vendor/pieceofcake2/cakephp/src/Cake/Utility",
+            "vendor/pieceofcake2/cakephp/src/Cake/View"
         ]
     },
     "scripts": {
