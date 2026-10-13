@@ -1,12 +1,17 @@
 parameters:
   ModelBehaviorsExtension:
     behaviorPaths:
+      - vendor/pieceofcake2/cakephp/src/Cake/Model/Behavior/*.php
       - vendor/pieceofcake2/cakephp/lib/Cake/Model/Behavior/*.php
+      - src/Cake/Model/Behavior/*.php
       - lib/Cake/Model/Behavior/*.php
+      - src/Model/Behavior/*.php
+      - plugins/*/Model/Behavior/*.php
       - app/Plugin/*/Model/Behavior/*.php
       - app/Model/Behavior/*.php
   SchemaService:
     schemaPaths:
+      - config/Schema/*.php
       - app/Config/Schema/*.php
   stubFiles:
     - stubs/Model/Model.stub
