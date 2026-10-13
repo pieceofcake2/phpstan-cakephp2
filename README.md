@@ -3,15 +3,17 @@
 [![GitHub License](https://img.shields.io/github/license/pieceofcake2/phpstan-cakephp2?label=License)](LICENSE)
 [![Packagist Version](https://img.shields.io/packagist/v/pieceofcake2/phpstan-cakephp2?label=Packagist)](https://packagist.org/packages/pieceofcake2/phpstan-cakephp2)
 [![PHP](https://img.shields.io/packagist/dependency-v/pieceofcake2/phpstan-cakephp2/php?logo=php&logoColor=%23FFFFFF&label=PHP&labelColor=%23777BB4&color=%23FFFFFF)](https://packagist.org/packages/pieceofcake2/phpstan-cakephp2)
-[![Tests](https://img.shields.io/github/actions/workflow/status/pieceofcake2/phpstan-cakephp2/CI.yml?label=CI)](https://github.com/pieceofcake2/phpstan-cakephp2/actions/workflows/tests.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/pieceofcake2/phpstan-cakephp2/CI.yml?label=CI)](https://github.com/pieceofcake2/phpstan-cakephp2/actions/workflows/CI.yml)
 [![Codecov](https://img.shields.io/codecov/c/gh/pieceofcake2/phpstan-cakephp2?label=Coverage)](https://codecov.io/gh/pieceofcake2/phpstan-cakephp2)
+
+**This is forked for CakePHP2.**
 
 PHPStan extensions to help test CakePHP 2 projects with PHPStan
 
 ## Requirements
 
 * PHP 8.0+
-* phpstan/phpstan 1.9+
+* phpstan/phpstan 2.x
 * pieceofcake2/cakephp 2.x
 
 ## Installation
@@ -37,7 +39,9 @@ parameters:
     behaviorPaths:
       - vendor/my-vendor/my-plugin/src/Model/Behavior/*.php
 ```
-See `extension.neon` for the default list of behavior locations.
+See `extension.neon` for the default list of behavior locations. The defaults cover both the modern
+pieceofcake2/app layout (`src/Model/Behavior`, `plugins/*/Model/Behavior`, `config/Schema`) and the legacy
+layout (`app/Model/Behavior`, `app/Plugin/*/Model/Behavior`, `app/Config/Schema`).
 
 ## Features
 
