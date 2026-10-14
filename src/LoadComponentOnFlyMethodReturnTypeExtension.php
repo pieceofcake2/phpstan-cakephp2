@@ -52,8 +52,12 @@ class LoadComponentOnFlyMethodReturnTypeExtension implements DynamicMethodReturn
         MethodCall $methodCall,
         Scope $scope,
     ): ?Type {
-        $arg = $methodCall->getArgs()[0]->value;
+        $args = $methodCall->getArgs();
+        if (!isset($args[0])) {
+            return null;
+        }
 
+        $arg = $args[0]->value;
         if (!$arg instanceof String_) {
             return null;
         }

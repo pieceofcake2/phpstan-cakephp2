@@ -20,3 +20,9 @@ $var = 'BasicModel';
 assertType('BasicModel', ClassRegistry::init($var));
 
 assertType('bool|object', ClassRegistry::init([123]));
+
+/** @var string $className */
+assertType('bool|object', ClassRegistry::init($className));
+
+// Calls without arguments must not crash the extension.
+assertType('bool|object', ClassRegistry::init());

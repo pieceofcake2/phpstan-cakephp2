@@ -60,7 +60,12 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
         StaticCall $methodCall,
         Scope $scope,
     ): ?Type {
-        $type = $scope->getType($methodCall->getArgs()[0]->value);
+        $args = $methodCall->getArgs();
+        if (!isset($args[0])) {
+            return $this->getDefaultType();
+        }
+
+        $type = $scope->getType($args[0]->value);
 
         foreach ($type->getConstantStrings() as $constantString) {
             $value = $constantString->getValue();
