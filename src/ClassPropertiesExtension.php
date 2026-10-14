@@ -29,13 +29,19 @@ abstract class ClassPropertiesExtension implements PropertiesClassReflectionExte
         ClassReflection $classReflection,
         string $propertyName,
     ): bool {
+        if (!array_filter($this->getContainingClassNames(), [$classReflection, 'is'])) {
+            return false;
+        }
+
+        // Properties declared with a `@property` tag are left to PHPStan, which handles the tags
+        // after the extensions of this package and would otherwise never see them.
+        if (ClassDeclarationReader::hasPropertyTag($classReflection, $propertyName)) {
+            return false;
+        }
+
         $propertyClassName = $this->getClassNameFromPropertyName($propertyName);
 
-        return array_filter(
-            $this->getContainingClassNames(),
-            [$classReflection, 'is'],
-        )
-            && $this->reflectionProvider->hasClass($propertyClassName)
+        return $this->reflectionProvider->hasClass($propertyClassName)
             && $this->reflectionProvider->getClass($propertyClassName)
                 ->is($this->getPropertyParentClassName());
     }

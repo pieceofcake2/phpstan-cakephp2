@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace PHPStanCakePHP2;
 
 /**
- * Adds {@link Model}s as properties to {@link Shell}s.
+ * Adds tasks as properties to {@link Shell}s.
  */
 final class ClassTasksExtension extends ClassPropertiesExtension
 {

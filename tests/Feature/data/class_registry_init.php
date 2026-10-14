@@ -26,3 +26,14 @@ assertType('bool|object', ClassRegistry::init($className));
 
 // Calls without arguments must not crash the extension.
 assertType('bool|object', ClassRegistry::init());
+
+// Models in plugin syntax.
+assertType('BasicModel', ClassRegistry::init('Plugin.BasicModel'));
+assertType('Model', ClassRegistry::init('Plugin.TableWithoutModel'));
+assertType('bool|object', ClassRegistry::init('Plugin.NotAClass'));
+
+// Models given as an array with a class key.
+assertType('BasicModel', ClassRegistry::init(['class' => 'BasicModel', 'alias' => 'Alias']));
+assertType('BasicModel', ClassRegistry::init(['class' => 'Plugin.BasicModel', 'alias' => 'Alias']));
+assertType('Model', ClassRegistry::init(['class' => 'Plugin.TableWithoutModel']));
+assertType('bool|object', ClassRegistry::init(['alias' => 'BasicModel']));

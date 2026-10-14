@@ -9,6 +9,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\BooleanType;
+use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\ObjectWithoutClassType;
@@ -67,19 +68,49 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
 
         $type = $scope->getType($args[0]->value);
 
-        foreach ($type->getConstantStrings() as $constantString) {
-            $value = $constantString->getValue();
-
-            if ($this->reflectionProvider->hasClass($value)) {
-                return new ObjectType($value);
+        foreach ($this->getClassNames($type) as $className) {
+            if ($this->reflectionProvider->hasClass($className)) {
+                return new ObjectType($className);
             }
 
-            if ($this->schemaService->hasTable(Inflector::tableize($value))) {
+            if ($this->schemaService->hasTable(Inflector::tableize($className))) {
                 return new ObjectType('Model');
             }
         }
 
         return $this->getDefaultType();
+    }
+
+    /**
+     * Returns the class names given to `ClassRegistry::init()`, without their plugin prefix.
+     *
+     * The class can be given as a string (`'Model'`, `'Plugin.Model'`), or as an array with a `class` key
+     * (`['class' => 'Plugin.Model', 'alias' => 'Alias']`).
+     *
+     * @param \PHPStan\Type\Type $type Type of the first argument.
+     * @return list<string>
+     */
+    private function getClassNames(Type $type): array
+    {
+        $classTypes = [$type];
+
+        foreach ($type->getConstantArrays() as $constantArray) {
+            $classKey = new ConstantStringType('class');
+
+            if ($constantArray->hasOffsetValueType($classKey)->yes()) {
+                $classTypes[] = $constantArray->getOffsetValueType($classKey);
+            }
+        }
+
+        $classNames = [];
+
+        foreach ($classTypes as $classType) {
+            foreach ($classType->getConstantStrings() as $constantString) {
+                $classNames[] = ClassDeclarationReader::removePluginPrefix($constantString->getValue());
+            }
+        }
+
+        return $classNames;
     }
 
     /**
