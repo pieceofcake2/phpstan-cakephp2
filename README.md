@@ -63,9 +63,13 @@ The following features are added to PHPStan:
   (`$controller->Model`)
 * Treat controller and component properties named after components listed in `$components` as instances of those
   classes (`$controller->Component`, `$component->Component`)
-* Treat shell properties named after task classes as instances of those classes (`$shell->Task`)
+* Treat shell properties named after task classes as instances of those classes (`$shell->Task`). A task listed
+  in the `$tasks` of a shell or task takes precedence over a model of the same name (e.g. the `Model` task of bake)
+* Leave properties declared with `@property` tags to PHPStan, so that the tags take precedence over the properties
+  added by this extension
 * Treat `ClassRegistry::init($className)` as returning an instance of `$className` where possible, or `Model`
-  when only a table for it is defined in a schema file
+  when only a table for it is defined in a schema file. The class name can be in plugin syntax
+  (`'Plugin.Model'`), or given as an array with a `class` key (`['class' => 'Plugin.Model', 'alias' => 'Alias']`)
 * Treat `$this->Components->load('Name')` as returning an instance of `NameComponent`
 
 ## Development
