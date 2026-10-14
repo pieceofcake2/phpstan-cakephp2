@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -9,6 +8,9 @@ namespace PHPStanCakePHP2;
  */
 final class ClassModelsExtension extends ClassPropertiesExtension
 {
+    /**
+     * @inheritDoc
+     */
     protected function getPropertyParentClassName(): string
     {
         return 'Model';
@@ -26,8 +28,11 @@ final class ClassModelsExtension extends ClassPropertiesExtension
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getClassNameFromPropertyName(
-        string $propertyName
+        string $propertyName,
     ): string {
         return $propertyName;
     }

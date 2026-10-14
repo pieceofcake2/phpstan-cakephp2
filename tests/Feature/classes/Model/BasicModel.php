@@ -1,3 +1,6 @@
 <?php
+declare(strict_types=1);
 
-class BasicModel extends Model {}
+class BasicModel extends Model
+{
+}

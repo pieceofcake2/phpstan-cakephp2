@@ -1,10 +1,10 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
 
 use Component;
+use ComponentCollection;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Analyser\Scope;
@@ -18,23 +18,40 @@ class LoadComponentOnFlyMethodReturnTypeExtension implements DynamicMethodReturn
 {
     private ReflectionProvider $reflectionProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param \PHPStan\Reflection\ReflectionProvider $reflectionProvider Reflection provider.
+     */
     public function __construct(ReflectionProvider $reflectionProvider)
     {
         $this->reflectionProvider = $reflectionProvider;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getClass(): string
     {
-        return \ComponentCollection::class;
+        return ComponentCollection::class;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function isMethodSupported(MethodReflection $methodReflection): bool
     {
         return $methodReflection->getName() === 'load';
     }
 
-    public function getTypeFromMethodCall(MethodReflection $methodReflection, MethodCall $methodCall, Scope $scope): ?Type
-    {
+    /**
+     * @inheritDoc
+     */
+    public function getTypeFromMethodCall(
+        MethodReflection $methodReflection,
+        MethodCall $methodCall,
+        Scope $scope,
+    ): ?Type {
         $arg = $methodCall->getArgs()[0]->value;
 
         if (!$arg instanceof String_) {

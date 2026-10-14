@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -17,20 +16,28 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
 {
     private ReflectionProvider $reflectionProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param \PHPStan\Reflection\ReflectionProvider $reflectionProvider Reflection provider.
+     */
     public function __construct(ReflectionProvider $reflectionProvider)
     {
         $this->reflectionProvider = $reflectionProvider;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function hasProperty(ClassReflection $classReflection, string $propertyName): bool
     {
         if (!array_filter($this->getContainingClassNames(), [$classReflection, 'is'])) {
             return false;
         }
 
-        $isDefinedInComponentsProperty = (bool) array_filter(
+        $isDefinedInComponentsProperty = (bool)array_filter(
             $this->getDefinedComponentsAsList($classReflection),
-            static fn (string $componentName): bool => $componentName === $propertyName
+            static fn(string $componentName): bool => $componentName === $propertyName,
         );
 
         if (!$isDefinedInComponentsProperty) {
@@ -44,11 +51,14 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
                 ->is('Component');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getProperty(ClassReflection $classReflection, string $propertyName): PropertyReflection
     {
         return new PublicReadOnlyPropertyReflection(
             $this->getClassNameFromPropertyName($propertyName),
-            $classReflection
+            $classReflection,
         );
     }
 
@@ -63,6 +73,12 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
         ];
     }
 
+    /**
+     * Returns the component class name for the given property name.
+     *
+     * @param string $propertyName Property name, e.g. `Session` or `SessionComponent`.
+     * @return string
+     */
     private function getClassNameFromPropertyName(string $propertyName): string
     {
         return str_contains($propertyName, 'Component') ? $propertyName : $propertyName . 'Component';
@@ -85,7 +101,7 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
                 ->getDefaultValueExpression();
 
             if (!$defaultValue instanceof Array_) {
-               continue;
+                continue;
             }
 
             foreach ($defaultValue->items as $item) {
