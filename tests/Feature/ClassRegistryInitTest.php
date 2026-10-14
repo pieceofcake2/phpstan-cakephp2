@@ -1,34 +1,23 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2\Test\Feature;
 
-use PHPStan\Testing\TypeInferenceTestCase;
-
-class ClassRegistryInitTest extends TypeInferenceTestCase
+class ClassRegistryInitTest extends FeatureTestCase
 {
     /**
-     * @return mixed[]
+     * @return iterable<string, array{string}>
      */
-    public function dataFileAsserts(): iterable
+    public static function dataFiles(): iterable
     {
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/class_registry_init.php');
+        yield 'class_registry_init' => [__DIR__ . '/data/class_registry_init.php'];
     }
 
     /**
-     * @dataProvider dataFileAsserts
-     * @param mixed $args
+     * @dataProvider dataFiles
      */
-    public function testControllerExtensions(string $assertType, string $file, ...$args): void
+    public function testClassRegistryInit(string $file): void
     {
-        $this->assertFileAsserts($assertType, $file, ...$args);
-    }
-
-    public static function getAdditionalConfigFiles(): array
-    {
-        return [
-            __DIR__ . '/data/phpstan.neon',
-        ];
+        $this->assertTypesInFile($file);
     }
 }

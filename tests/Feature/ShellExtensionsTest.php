@@ -1,36 +1,25 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2\Test\Feature;
 
-use PHPStan\Testing\TypeInferenceTestCase;
-
-class ShellExtensionsTest extends TypeInferenceTestCase
+class ShellExtensionsTest extends FeatureTestCase
 {
     /**
-     * @return mixed[]
+     * @return iterable<string, array{string}>
      */
-    public function dataFileAsserts(): iterable
+    public static function dataFiles(): iterable
     {
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_shell_model.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_shell_task.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/invalid_shell_property.php');
+        yield 'existing_shell_model' => [__DIR__ . '/data/existing_shell_model.php'];
+        yield 'existing_shell_task' => [__DIR__ . '/data/existing_shell_task.php'];
+        yield 'invalid_shell_property' => [__DIR__ . '/data/invalid_shell_property.php'];
     }
 
     /**
-     * @dataProvider dataFileAsserts
-     * @param mixed $args
+     * @dataProvider dataFiles
      */
-    public function testShellExtensions(string $assertType, string $file, ...$args): void
+    public function testShellExtensions(string $file): void
     {
-        $this->assertFileAsserts($assertType, $file, ...$args);
-    }
-
-    public static function getAdditionalConfigFiles(): array
-    {
-        return [
-            __DIR__ . '/data/phpstan.neon',
-        ];
+        $this->assertTypesInFile($file);
     }
 }

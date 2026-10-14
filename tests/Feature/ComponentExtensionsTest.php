@@ -1,35 +1,24 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2\Test\Feature;
 
-use PHPStan\Testing\TypeInferenceTestCase;
-
-class ComponentExtensionsTest extends TypeInferenceTestCase
+class ComponentExtensionsTest extends FeatureTestCase
 {
     /**
-     * @return mixed[]
+     * @return iterable<string, array{string}>
      */
-    public function dataFileAsserts(): iterable
+    public static function dataFiles(): iterable
     {
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_component_component.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/invalid_component_property.php');
+        yield 'existing_component_component' => [__DIR__ . '/data/existing_component_component.php'];
+        yield 'invalid_component_property' => [__DIR__ . '/data/invalid_component_property.php'];
     }
 
     /**
-     * @dataProvider dataFileAsserts
-     * @param mixed $args
+     * @dataProvider dataFiles
      */
-    public function testControllerExtensions(string $assertType, string $file, ...$args): void
+    public function testComponentExtensions(string $file): void
     {
-        $this->assertFileAsserts($assertType, $file, ...$args);
-    }
-
-    public static function getAdditionalConfigFiles(): array
-    {
-        return [
-            __DIR__ . '/data/phpstan.neon',
-        ];
+        $this->assertTypesInFile($file);
     }
 }

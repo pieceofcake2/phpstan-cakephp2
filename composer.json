@@ -4,11 +4,11 @@
     "type": "library",
     "license": "MIT",
     "require": {
-        "php": "^8.0",
+        "php": ">=8.0",
         "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
-        "nunomaduro/phpinsights": "^2.7",
+        "cakephp/cakephp-codesniffer": "^5.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^9.6",
         "pieceofcake2/cakephp": "^2.12"
@@ -23,6 +23,7 @@
             "PHPStanCakePHP2\\Test\\": "tests/"
         },
         "classmap": [
+            "tests/Feature/apps",
             "tests/Feature/classes",
             "vendor/pieceofcake2/cakephp/src/Cake/Cache",
             "vendor/pieceofcake2/cakephp/src/Cake/Config",
@@ -36,14 +37,14 @@
         ]
     },
     "scripts": {
-        "phpinsights": "phpinsights analyse --no-interaction --ansi --config-path=phpinsights.php --summary src",
-        "phpinsights-github": "phpinsights analyse --no-interaction --ansi --config-path=phpinsights.php --format=github-action src",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
         "phpstan": "phpstan",
         "phpunit": "phpunit",
         "test": [
             "@phpunit",
             "@phpstan",
-            "@phpinsights"
+            "@cs-check"
         ]
     },
     "extra": {

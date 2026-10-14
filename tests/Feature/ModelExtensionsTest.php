@@ -1,37 +1,26 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2\Test\Feature;
 
-use PHPStan\Testing\TypeInferenceTestCase;
-
-class ModelExtensionsTest extends TypeInferenceTestCase
+class ModelExtensionsTest extends FeatureTestCase
 {
     /**
-     * @return mixed[]
+     * @return iterable<string, array{string}>
      */
-    public function dataFileAsserts(): iterable
+    public static function dataFiles(): iterable
     {
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/core_model_behavior.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/custom_model_behavior.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/invalid_model_property.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_model_model.php');
+        yield 'core_model_behavior' => [__DIR__ . '/data/core_model_behavior.php'];
+        yield 'custom_model_behavior' => [__DIR__ . '/data/custom_model_behavior.php'];
+        yield 'invalid_model_property' => [__DIR__ . '/data/invalid_model_property.php'];
+        yield 'existing_model_model' => [__DIR__ . '/data/existing_model_model.php'];
     }
 
     /**
-     * @dataProvider dataFileAsserts
-     * @param mixed $args
+     * @dataProvider dataFiles
      */
-    public function testModelExtensions(string $assertType, string $file, ...$args): void
+    public function testModelExtensions(string $file): void
     {
-        $this->assertFileAsserts($assertType, $file, ...$args);
-    }
-
-    public static function getAdditionalConfigFiles(): array
-    {
-        return [
-            __DIR__ . '/data/phpstan.neon',
-        ];
+        $this->assertTypesInFile($file);
     }
 }

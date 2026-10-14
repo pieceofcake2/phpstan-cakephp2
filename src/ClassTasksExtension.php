@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -9,6 +8,9 @@ namespace PHPStanCakePHP2;
  */
 final class ClassTasksExtension extends ClassPropertiesExtension
 {
+    /**
+     * @inheritDoc
+     */
     protected function getPropertyParentClassName(): string
     {
         return 'Shell';
@@ -22,8 +24,11 @@ final class ClassTasksExtension extends ClassPropertiesExtension
         return ['Shell'];
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function getClassNameFromPropertyName(
-        string $propertyName
+        string $propertyName,
     ): string {
         return $propertyName . 'Task';
     }

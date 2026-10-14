@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -8,7 +7,6 @@ use PHPStan\BetterReflection\Reflection\Adapter\ReflectionMethod;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\ExtendedMethodReflection;
 use PHPStan\Reflection\MethodReflection;
-use PHPStan\Reflection\ParameterReflection;
 use PHPStan\Reflection\ParametersAcceptor;
 use PHPStan\Type\ObjectType;
 
@@ -16,6 +14,11 @@ final class ModelBehaviorMethodExtractor
 {
     private ClassReflection $classReflection;
 
+    /**
+     * Constructor.
+     *
+     * @param \PHPStan\Reflection\ClassReflection $classReflection Behavior class reflection.
+     */
     public function __construct(ClassReflection $classReflection)
     {
         $this->classReflection = $classReflection;
@@ -27,22 +30,23 @@ final class ModelBehaviorMethodExtractor
      *
      * Also filters out private, protected, and static methods.
      *
-     * @return array<MethodReflection>
+     * @return array<\PHPStan\Reflection\MethodReflection>
      */
     public function getModelBehaviorMethods(): array
     {
         $methodNames = array_map(
             [$this, 'getMethodReflectionName'],
-            $this->classReflection->getNativeReflection()->getMethods()
+            $this->classReflection->getNativeReflection()->getMethods(),
         );
-        /** @var array<ExtendedMethodReflection> $methodReflections */
+        /** @var array<\PHPStan\Reflection\ExtendedMethodReflection> $methodReflections */
         $methodReflections = array_filter(
             array_map(
                 [$this->classReflection, 'getNativeMethod'],
-                $methodNames
+                $methodNames,
             ),
-            [$this, 'filterBehaviorMethods']
+            [$this, 'filterBehaviorMethods'],
         );
+
         return array_map([$this, 'wrapBehaviorMethod'], $methodReflections);
     }
 
@@ -50,7 +54,7 @@ final class ModelBehaviorMethodExtractor
      * Returns the name of a method from its reflection.
      */
     private function getMethodReflectionName(
-        ReflectionMethod $methodReflection
+        ReflectionMethod $methodReflection,
     ): string {
         return $methodReflection->getName();
     }
@@ -65,13 +69,13 @@ final class ModelBehaviorMethodExtractor
      * * Have at least one variant which accepts a Model as its first parameter
      */
     private function filterBehaviorMethods(
-        ExtendedMethodReflection $methodReflection
+        ExtendedMethodReflection $methodReflection,
     ): bool {
         return $methodReflection->isPublic()
             && ! $methodReflection->isStatic()
             && array_filter(
                 $methodReflection->getVariants(),
-                [$this, 'filterBehaviorMethodVariants']
+                [$this, 'filterBehaviorMethodVariants'],
             );
     }
 
@@ -80,10 +84,10 @@ final class ModelBehaviorMethodExtractor
      * parameter.
      */
     private function filterBehaviorMethodVariants(
-        ParametersAcceptor $parametersAcceptor
+        ParametersAcceptor $parametersAcceptor,
     ): bool {
         $parameters = $parametersAcceptor->getParameters();
-        /** @var ParameterReflection|null $firstParameter */
+        /** @var \PHPStan\Reflection\ParameterReflection|null $firstParameter */
         $firstParameter = array_shift($parameters);
 
         if (! $firstParameter) {
@@ -105,7 +109,7 @@ final class ModelBehaviorMethodExtractor
      * Wraps a method reflection in a wrapper which removes the first parameter.
      */
     private function wrapBehaviorMethod(
-        MethodReflection $methodReflection
+        MethodReflection $methodReflection,
     ): MethodReflection {
         return new ModelBehaviorMethodWrapper($methodReflection);
     }

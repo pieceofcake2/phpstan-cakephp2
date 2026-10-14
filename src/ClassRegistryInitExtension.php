@@ -1,18 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
 
-use PhpParser\Node\Expr;
-use PhpParser\Node\Expr\ClassConstFetch;
-use PhpParser\Node\Expr\Variable;
-use PhpParser\Node\Name;
-use PhpParser\Node\Scalar\String_;
-use PHPStan\Type\Constant\ConstantStringType;
-use PHPStanCakePHP2\Service\SchemaService;
 use Inflector;
-use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr\StaticCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
@@ -23,6 +14,7 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\ObjectWithoutClassType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
+use PHPStanCakePHP2\Service\SchemaService;
 
 class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtension
 {
@@ -30,27 +22,50 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
 
     private SchemaService $schemaService;
 
+    /**
+     * Constructor.
+     *
+     * @param \PHPStan\Reflection\ReflectionProvider $reflectionProvider Reflection provider.
+     * @param \PHPStanCakePHP2\Service\SchemaService $schemaService Schema service.
+     */
     public function __construct(
         ReflectionProvider $reflectionProvider,
-        SchemaService $schemaService)
-    {
+        SchemaService $schemaService,
+    ) {
         $this->reflectionProvider = $reflectionProvider;
         $this->schemaService = $schemaService;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getClass(): string
     {
         return 'ClassRegistry';
     }
 
+    /**
+     * @inheritDoc
+     */
     public function isStaticMethodSupported(MethodReflection $methodReflection): bool
     {
         return $methodReflection->getName() === 'init';
     }
 
-    public function getTypeFromStaticMethodCall(MethodReflection $methodReflection, StaticCall $methodCall, Scope $scope): ?Type
-    {
-        $type = $scope->getType($methodCall->getArgs()[0]->value);
+    /**
+     * @inheritDoc
+     */
+    public function getTypeFromStaticMethodCall(
+        MethodReflection $methodReflection,
+        StaticCall $methodCall,
+        Scope $scope,
+    ): ?Type {
+        $args = $methodCall->getArgs();
+        if (!isset($args[0])) {
+            return $this->getDefaultType();
+        }
+
+        $type = $scope->getType($args[0]->value);
 
         foreach ($type->getConstantStrings() as $constantString) {
             $value = $constantString->getValue();
@@ -67,6 +82,11 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
         return $this->getDefaultType();
     }
 
+    /**
+     * Returns the type `ClassRegistry::init()` is declared to return.
+     *
+     * @return \PHPStan\Type\Type
+     */
     private function getDefaultType(): Type
     {
         return new UnionType([

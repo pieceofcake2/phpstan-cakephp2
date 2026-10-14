@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -16,6 +15,11 @@ final class ClassReflectionFinder
 {
     private ReflectionProvider $reflectionProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param \PHPStan\Reflection\ReflectionProvider $reflectionProvider Reflection provider.
+     */
     public function __construct(ReflectionProvider $reflectionProvider)
     {
         $this->reflectionProvider = $reflectionProvider;
@@ -23,40 +27,37 @@ final class ClassReflectionFinder
 
     /**
      * @param array<string> $paths
-     *
-     * @return array<ClassReflection>
-     *
-     * @throws Exception
+     * @return array<\PHPStan\Reflection\ClassReflection>
+     * @throws \Exception
      */
     public function getClassReflections(
         array $paths,
         string $isA = 'stdClass',
-        ?callable $pathToClassName = null
+        ?callable $pathToClassName = null,
     ): array {
         $classReflections = array_map(
             [$this->reflectionProvider, 'getClass'],
-            $this->getClassNamesFromPaths($paths, $pathToClassName)
+            $this->getClassNamesFromPaths($paths, $pathToClassName),
         );
+
         return array_filter(
             $classReflections,
             static function (
-                ClassReflection $classReflection
+                ClassReflection $classReflection,
             ) use ($isA) {
                 return $classReflection->is($isA);
-            }
+            },
         );
     }
 
     /**
      * @param array<string> $paths
-     *
      * @return array<string>
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     private function getClassNamesFromPaths(
         array $paths,
-        ?callable $pathToClassName
+        ?callable $pathToClassName,
     ): array {
         $classPaths = [];
         foreach ($paths as $path) {
@@ -67,12 +68,19 @@ final class ClassReflectionFinder
             $classPaths = array_merge($classPaths, $filePaths);
         }
         $classNames = array_map($pathToClassName ?? [$this, 'getClassNameFromFileName'], $classPaths);
+
         return array_filter(
             $classNames,
-            [$this->reflectionProvider, 'hasClass']
+            [$this->reflectionProvider, 'hasClass'],
         );
     }
 
+    /**
+     * Returns the class name for a file following the `ClassName.php` convention.
+     *
+     * @param string $fileName File path.
+     * @return string
+     */
     private function getClassNameFromFileName(string $fileName): string
     {
         return basename($fileName, '.php');

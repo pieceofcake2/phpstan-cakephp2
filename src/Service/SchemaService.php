@@ -1,13 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2\Service;
 
-use PHPStanCakePHP2\ClassReflectionFinder;
-use Exception;
 use PHPStan\BetterReflection\Reflection\Adapter\ReflectionProperty;
 use PHPStan\Reflection\ReflectionProvider;
+use PHPStanCakePHP2\ClassReflectionFinder;
 use ReflectionProperty as CoreReflectionProperty;
 
 /**
@@ -32,19 +30,19 @@ final class SchemaService
     private ?array $tableSchemas = null;
 
     /**
-     * @param ReflectionProvider $reflectionProvider
+     * @param \PHPStan\Reflection\ReflectionProvider $reflectionProvider
      * @param array<string> $schemaPaths
      */
     public function __construct(
         ReflectionProvider $reflectionProvider,
-        array $schemaPaths
+        array $schemaPaths,
     ) {
         $this->reflectionProvider = $reflectionProvider;
         $this->schemaPaths = $schemaPaths;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function hasTable(string $table): bool
     {
@@ -54,11 +52,12 @@ final class SchemaService
     /**
      * @param string $table
      * @return table_schema|null
-     * @throws Exception
+     * @throws \Exception
      */
     public function getTableSchema(string $table)
     {
         $tableSchemas = $this->getTableSchemas();
+
         return array_key_exists($table, $tableSchemas)
             ? $tableSchemas[$table]
             : null;
@@ -66,8 +65,7 @@ final class SchemaService
 
     /**
      * @return array<string, table_schema>
-     *
-     * @throws Exception
+     * @throws \Exception
      */
     private function getTableSchemas(): array
     {
@@ -78,18 +76,18 @@ final class SchemaService
             function (ReflectionProperty $reflectionProperty) {
                 return $reflectionProperty->getName();
             },
-            $this->reflectionProvider->getClass('CakeSchema')->getNativeReflection()->getProperties()
+            $this->reflectionProvider->getClass('CakeSchema')->getNativeReflection()->getProperties(),
         );
         $this->tableSchemas = [];
         $classReflectionFinder = new ClassReflectionFinder(
-            $this->reflectionProvider
+            $this->reflectionProvider,
         );
         $schemaReflections = $classReflectionFinder->getClassReflections(
             $this->schemaPaths,
             'CakeSchema',
             function (string $fileName) {
                 return $this->fileNameToClassName($fileName);
-            }
+            },
         );
         foreach ($schemaReflections as $schemaReflection) {
             $propertyNames = array_map(
@@ -97,18 +95,24 @@ final class SchemaService
                     return $reflectionProperty->getName();
                 },
                 $schemaReflection->getNativeReflection()
-                    ->getProperties(CoreReflectionProperty::IS_PUBLIC)
+                    ->getProperties(CoreReflectionProperty::IS_PUBLIC),
             );
             $tableProperties = array_diff($propertyNames, $cakeSchemaPropertyNames);
             $this->tableSchemas += array_intersect_key(
                 $schemaReflection->getNativeReflection()->getDefaultProperties(),
-                array_fill_keys($tableProperties, null)
+                array_fill_keys($tableProperties, null),
             );
         }
 
         return $this->tableSchemas;
     }
 
+    /**
+     * Returns the schema class name for a schema file, e.g. `app.php` => `AppSchema`.
+     *
+     * @param string $fileName Schema file path.
+     * @return string
+     */
     private function fileNameToClassName(string $fileName): string
     {
         return str_replace(
@@ -118,9 +122,9 @@ final class SchemaService
                 str_replace(
                     ['_', '-'],
                     ' ',
-                    basename($fileName, '.php')
-                )
-            )
+                    basename($fileName, '.php'),
+                ),
+            ),
         ) . 'Schema';
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -17,20 +16,28 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
 {
     private ReflectionProvider $reflectionProvider;
 
+    /**
+     * Constructor.
+     *
+     * @param \PHPStan\Reflection\ReflectionProvider $reflectionProvider Reflection provider.
+     */
     public function __construct(ReflectionProvider $reflectionProvider)
     {
         $this->reflectionProvider = $reflectionProvider;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function hasProperty(ClassReflection $classReflection, string $propertyName): bool
     {
         if (!array_filter($this->getContainingClassNames(), [$classReflection, 'is'])) {
             return false;
         }
 
-        $isDefinedInComponentsProperty = (bool) array_filter(
+        $isDefinedInComponentsProperty = (bool)array_filter(
             $this->getDefinedComponentsAsList($classReflection),
-            static fn (string $componentName): bool => $componentName === $propertyName
+            static fn(string $componentName): bool => $componentName === $propertyName,
         );
 
         if (!$isDefinedInComponentsProperty) {
@@ -44,11 +51,14 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
                 ->is('Component');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getProperty(ClassReflection $classReflection, string $propertyName): PropertyReflection
     {
         return new PublicReadOnlyPropertyReflection(
             $this->getClassNameFromPropertyName($propertyName),
-            $classReflection
+            $classReflection,
         );
     }
 
@@ -63,9 +73,28 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
         ];
     }
 
+    /**
+     * Returns the component class name for the given property name.
+     *
+     * @param string $propertyName Property name, e.g. `Session` or `SessionComponent`.
+     * @return string
+     */
     private function getClassNameFromPropertyName(string $propertyName): string
     {
         return str_contains($propertyName, 'Component') ? $propertyName : $propertyName . 'Component';
+    }
+
+    /**
+     * Returns the component name without its plugin prefix, e.g. `DebugKit.Toolbar` => `Toolbar`.
+     *
+     * @param string $componentName Component name, optionally in plugin syntax.
+     * @return string
+     */
+    private function removePluginPrefix(string $componentName): string
+    {
+        $position = strrpos($componentName, '.');
+
+        return $position === false ? $componentName : substr($componentName, $position + 1);
     }
 
     /**
@@ -85,18 +114,21 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
                 ->getDefaultValueExpression();
 
             if (!$defaultValue instanceof Array_) {
-               continue;
+                continue;
             }
 
             foreach ($defaultValue->items as $item) {
-                if ($item->value instanceof String_) {
-                    $definedComponents[] = $item->value->value;
+                // Components with settings are defined as `'Name' => [...settings]`.
+                $component = $item->key ?? $item->value;
+
+                if ($component instanceof String_) {
+                    $definedComponents[] = $this->removePluginPrefix($component->value);
 
                     continue;
                 }
 
-                if ($item->value instanceof ClassConstFetch && $item->value->class instanceof FullyQualified) {
-                    $definedComponents[] = $item->value->class->toString();
+                if ($component instanceof ClassConstFetch && $component->class instanceof FullyQualified) {
+                    $definedComponents[] = $component->class->toString();
                 }
             }
         }

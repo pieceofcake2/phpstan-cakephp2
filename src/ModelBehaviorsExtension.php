@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
@@ -23,7 +22,7 @@ final class ModelBehaviorsExtension implements MethodsClassReflectionExtension
     private array $behaviorPaths;
 
     /**
-     * @var array<MethodReflection>|null
+     * @var array<\PHPStan\Reflection\MethodReflection>|null
      */
     private ?array $behaviorMethods = null;
 
@@ -32,64 +31,67 @@ final class ModelBehaviorsExtension implements MethodsClassReflectionExtension
      */
     public function __construct(
         ReflectionProvider $reflectionProvider,
-        array $behaviorPaths
+        array $behaviorPaths,
     ) {
         $this->reflectionProvider = $reflectionProvider;
         $this->behaviorPaths = $behaviorPaths;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function hasMethod(
         ClassReflection $classReflection,
-        string $methodName
+        string $methodName,
     ): bool {
         return $classReflection->is('Model')
             && in_array(
                 $methodName,
                 array_map(
                     [$this, 'getMethodReflectionName'],
-                    $this->getBehaviorMethods()
+                    $this->getBehaviorMethods(),
                 ),
-                true
+                true,
             );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getMethod(
         ClassReflection $classReflection,
-        string $methodName
+        string $methodName,
     ): MethodReflection {
         $methodReflections = array_filter(
             $this->getBehaviorMethods(),
             static function (
-                MethodReflection $methodReflection
+                MethodReflection $methodReflection,
             ) use ($methodName) {
                 return $methodReflection->getName() === $methodName;
-            }
+            },
         );
         if (! $methodReflections) {
             throw new Exception('Method not found');
         }
+
         return reset($methodReflections);
     }
 
     /**
      * Gets all behavior methods from known behavior classes.
      *
-     * @return array<MethodReflection>
-     *
-     * @throws Exception
+     * @return array<\PHPStan\Reflection\MethodReflection>
+     * @throws \Exception
      */
     private function getBehaviorMethods(): array
     {
         if ($this->behaviorMethods === null) {
             $classReflectionFinder = new ClassReflectionFinder(
-                $this->reflectionProvider
+                $this->reflectionProvider,
             );
             $classReflections = $classReflectionFinder->getClassReflections(
                 $this->behaviorPaths,
-                'ModelBehavior'
+                'ModelBehavior',
             );
             $this->behaviorMethods = [];
             foreach ($classReflections as $classReflection) {
@@ -97,10 +99,11 @@ final class ModelBehaviorsExtension implements MethodsClassReflectionExtension
                     new ModelBehaviorMethodExtractor($classReflection);
                 $this->behaviorMethods = array_merge(
                     $this->behaviorMethods,
-                    $modelBehaviorMethodExtractor->getModelBehaviorMethods()
+                    $modelBehaviorMethodExtractor->getModelBehaviorMethods(),
                 );
             }
         }
+
         return $this->behaviorMethods;
     }
 
@@ -108,7 +111,7 @@ final class ModelBehaviorsExtension implements MethodsClassReflectionExtension
      * Returns the name of a method from its reflection.
      */
     private function getMethodReflectionName(
-        MethodReflection $methodReflection
+        MethodReflection $methodReflection,
     ): string {
         return $methodReflection->getName();
     }

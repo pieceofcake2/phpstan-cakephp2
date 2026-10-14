@@ -1,0 +1,4 @@
+# The tests analyse their data file with this directory as the working directory,
+# so behaviors and schemas are discovered through the default paths of extension.neon.
+includes:
+  - ../../../../extension.neon
