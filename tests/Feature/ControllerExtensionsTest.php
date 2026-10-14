@@ -3,35 +3,25 @@ declare(strict_types=1);
 
 namespace PHPStanCakePHP2\Test\Feature;
 
-use PHPStan\Testing\TypeInferenceTestCase;
-
-class ControllerExtensionsTest extends TypeInferenceTestCase
+class ControllerExtensionsTest extends FeatureTestCase
 {
     /**
-     * @return mixed[]
+     * @return iterable<string, array{string}>
      */
-    public function dataFileAsserts(): iterable
+    public static function dataFiles(): iterable
     {
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_controller_model.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_controller_component.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/invalid_controller_property.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_controller_component_with_same_method_name_as_model.php');
-        yield from $this->gatherAssertTypes(__DIR__ . '/data/existing_controller_component_from_parent_controller.php');
+        yield 'existing_controller_model' => [__DIR__ . '/data/existing_controller_model.php'];
+        yield 'existing_controller_component' => [__DIR__ . '/data/existing_controller_component.php'];
+        yield 'invalid_controller_property' => [__DIR__ . '/data/invalid_controller_property.php'];
+        yield 'existing_controller_component_with_same_method_name_as_model' => [__DIR__ . '/data/existing_controller_component_with_same_method_name_as_model.php'];
+        yield 'existing_controller_component_from_parent_controller' => [__DIR__ . '/data/existing_controller_component_from_parent_controller.php'];
     }
 
     /**
-     * @dataProvider dataFileAsserts
-     * @param mixed $args
+     * @dataProvider dataFiles
      */
-    public function testControllerExtensions(string $assertType, string $file, ...$args): void
+    public function testControllerExtensions(string $file): void
     {
-        $this->assertFileAsserts($assertType, $file, ...$args);
-    }
-
-    public static function getAdditionalConfigFiles(): array
-    {
-        return [
-            __DIR__ . '/data/phpstan.neon',
-        ];
+        $this->assertTypesInFile($file);
     }
 }
