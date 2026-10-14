@@ -14,6 +14,7 @@ use PHPStan\Type\Constant\ConstantBooleanType;
 use PHPStan\Type\Constant\ConstantIntegerType;
 use PHPStan\Type\Constant\ConstantStringType;
 use PHPStan\Type\DynamicStaticMethodReturnTypeExtension;
+use PHPStan\Type\MixedType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\ObjectWithoutClassType;
 use PHPStan\Type\Type;
@@ -24,7 +25,7 @@ use PHPStanCakePHP2\Service\SchemaService;
 /**
  * Resolves the type returned by `ClassRegistry::init($class, $strict = false)`.
  *
- * When `$class` is a single class (a string, or an array with a `class` key and no numeric keys):
+ * When `$class` is a single class (a string, or an array without a `0` key, usually with a `class` key):
  *
  * - A class known to PHPStan resolves to an instance of that class (with `$strict`, only when it
  *   is a model, since `init()` returns false for other classes).
@@ -37,8 +38,8 @@ use PHPStanCakePHP2\Service\SchemaService;
  * - With `$strict`, `init()` returns false when the class does not exist or is not a model, so any
  *   other class resolves to `object|false`.
  *
- * Other forms of `$class` (lists of configurations, which make `init()` return true, or arrays of
- * unknown shape) resolve to the declared `bool|object`.
+ * Other forms of `$class` (lists of configurations, which make `init()` return true or false, or
+ * values which may be such lists) resolve to the declared `bool|object`.
  */
 class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtension
 {
@@ -113,30 +114,27 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
      *
      * The class can be given as a string (`'Model'`, `'Plugin.Model'`), or as an array with a `class` key
      * (`['class' => 'Plugin.Model', 'alias' => 'Alias']`). Arrays with a `0` key are lists of
-     * configurations.
+     * configurations. Any other value creates a single instance too, as `init()` wraps it in an array.
      *
      * @param \PHPStan\Type\Type $type Type of the first argument.
      * @return \PHPStan\Type\Type|null
      */
     private function getClassType(Type $type): ?Type
     {
-        if ($type->isString()->yes()) {
+        if ($type->isArray()->no()) {
             return $type;
         }
 
-        $classKey = new ConstantStringType('class');
-
-        if (
-            $type->isArray()->yes()
-            && $type->hasOffsetValueType(new ConstantIntegerType(0))->no()
-            && $type->hasOffsetValueType($classKey)->yes()
-        ) {
-            $classType = $type->getOffsetValueType($classKey);
-
-            return $classType->isString()->yes() ? $classType : null;
+        if (!$type->isArray()->yes() || !$type->hasOffsetValueType(new ConstantIntegerType(0))->no()) {
+            return null;
         }
 
-        return null;
+        $classKey = new ConstantStringType('class');
+        if (!$type->hasOffsetValueType($classKey)->yes()) {
+            return new MixedType();
+        }
+
+        return $type->getOffsetValueType($classKey);
     }
 
     /**
@@ -165,7 +163,7 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
     /**
      * Returns the type `ClassRegistry::init()` returns for the given class name.
      *
-     * @param \PHPStan\Type\Type $classType Type of the class name, a string.
+     * @param \PHPStan\Type\Type $classType Type of the class name.
      * @param bool $strict Whether `$strict` is true.
      * @return \PHPStan\Type\Type
      */

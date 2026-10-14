@@ -37,7 +37,8 @@ assertType('object', ClassRegistry::init('Plugin.NotAClass'));
 assertType('BasicModel', ClassRegistry::init(['class' => 'BasicModel', 'alias' => 'Alias']));
 assertType('BasicModel', ClassRegistry::init(['class' => 'Plugin.BasicModel', 'alias' => 'Alias']));
 assertType('Model', ClassRegistry::init(['class' => 'Plugin.TableWithoutModel']));
-assertType('bool|object', ClassRegistry::init(['alias' => 'BasicModel']));
+// Without a class key, init() creates an AppModel.
+assertType('object', ClassRegistry::init(['alias' => 'BasicModel']));
 
 // Class names which are not constant strings.
 /** @var non-empty-string $nonEmptyClassName */
@@ -74,11 +75,23 @@ assertType('object|false', ClassRegistry::init($className, $strict));
 assertType('BasicModel', ClassRegistry::init('BasicModel', $strict));
 assertType('object|false', ClassRegistry::init('TableWithoutModel', $strict));
 
-// Lists of configurations, and arrays of unknown shape, keep the declared type.
-assertType('bool|object', ClassRegistry::init([['class' => 'BasicModel'], ['class' => 'SecondModel']]));
+// Values other than arrays are wrapped in a configuration, like strings.
+/** @var int|string $key */
+assertType('object', ClassRegistry::init($key));
+assertType('object', ClassRegistry::init(['class' => $key, 'alias' => 'Alias']));
+assertType('object|false', ClassRegistry::init(['class' => $key], true));
 /** @var array<string, string> $config */
-assertType('bool|object', ClassRegistry::init($config));
-/** @var array{class: int} $invalidConfig */
-assertType('bool|object', ClassRegistry::init($invalidConfig));
+assertType('object', ClassRegistry::init($config));
+/** @var array{class: int} $intConfig */
+assertType('object', ClassRegistry::init($intConfig));
+
+// Lists of configurations, and values which may be such lists, keep the declared type.
+assertType('bool|object', ClassRegistry::init([['class' => 'BasicModel'], ['class' => 'SecondModel']]));
+/** @var array<int, array{class: string}> $configs */
+assertType('bool|object', ClassRegistry::init($configs));
+/** @var array<mixed> $anyArray */
+assertType('bool|object', ClassRegistry::init($anyArray));
+/** @var string|array<mixed> $stringOrArray */
+assertType('bool|object', ClassRegistry::init($stringOrArray));
 /** @var mixed $mixed */
 assertType('bool|object', ClassRegistry::init($mixed));
