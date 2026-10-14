@@ -85,6 +85,19 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
     }
 
     /**
+     * Returns the component name without its plugin prefix, e.g. `DebugKit.Toolbar` => `Toolbar`.
+     *
+     * @param string $componentName Component name, optionally in plugin syntax.
+     * @return string
+     */
+    private function removePluginPrefix(string $componentName): string
+    {
+        $position = strrpos($componentName, '.');
+
+        return $position === false ? $componentName : substr($componentName, $position + 1);
+    }
+
+    /**
      * @return list<string>
      */
     private function getDefinedComponentsAsList(ClassReflection $classReflection): array
@@ -105,14 +118,17 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
             }
 
             foreach ($defaultValue->items as $item) {
-                if ($item->value instanceof String_) {
-                    $definedComponents[] = $item->value->value;
+                // Components with settings are defined as `'Name' => [...settings]`.
+                $component = $item->key ?? $item->value;
+
+                if ($component instanceof String_) {
+                    $definedComponents[] = $this->removePluginPrefix($component->value);
 
                     continue;
                 }
 
-                if ($item->value instanceof ClassConstFetch && $item->value->class instanceof FullyQualified) {
-                    $definedComponents[] = $item->value->class->toString();
+                if ($component instanceof ClassConstFetch && $component->class instanceof FullyQualified) {
+                    $definedComponents[] = $component->class->toString();
                 }
             }
         }
