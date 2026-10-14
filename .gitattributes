@@ -4,6 +4,6 @@
 /.* export-ignore
 /tests/ export-ignore
 /docker-compose.yml export-ignore
-/phpinsights.php export-ignore
+/phpcs.xml export-ignore
 /phpstan.neon.dist export-ignore
 /phpunit.xml export-ignore

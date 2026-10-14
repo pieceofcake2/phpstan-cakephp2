@@ -8,7 +8,7 @@
         "phpstan/phpstan": "^2.0"
     },
     "require-dev": {
-        "nunomaduro/phpinsights": "^2.7",
+        "cakephp/cakephp-codesniffer": "^5.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^9.6",
         "pieceofcake2/cakephp": "^2.12"
@@ -36,14 +36,14 @@
         ]
     },
     "scripts": {
-        "phpinsights": "phpinsights analyse --no-interaction --ansi --config-path=phpinsights.php --summary src",
-        "phpinsights-github": "phpinsights analyse --no-interaction --ansi --config-path=phpinsights.php --format=github-action src",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
         "phpstan": "phpstan",
         "phpunit": "phpunit",
         "test": [
             "@phpunit",
             "@phpstan",
-            "@phpinsights"
+            "@cs-check"
         ]
     },
     "extra": {

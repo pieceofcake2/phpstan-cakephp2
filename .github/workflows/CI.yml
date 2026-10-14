@@ -120,3 +120,39 @@ jobs:
 
       - name: Run static type analysis
         run: ./vendor/bin/phpstan
+
+  phpcs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: cs2pr
+
+      - name: Composer get cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php8.4-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-php8.4-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Check PHP code style
+        id: phpcs
+        run: ./vendor/bin/phpcs --report-full --report-checkstyle=./phpcs-report.xml
+
+      - name: Show PHPCS results in PR
+        if: ${{ always() && steps.phpcs.outcome == 'failure' }}
+        run: cs2pr ./phpcs-report.xml

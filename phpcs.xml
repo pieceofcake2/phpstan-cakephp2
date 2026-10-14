@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+    <config name="php_version" value="80000"/>
+
+    <arg value="ps"/>
+    <arg name="colors"/>
+    <arg name="parallel" value="16"/>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <rule ref="CakePHP"/>
+
+    <!--
+        The fixtures under tests/Feature/classes and tests/Feature/apps emulate CakePHP 2 applications,
+        which declare their classes in the global namespace and name schema files after the schema
+        (app.php => AppSchema).
+    -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>tests/Feature/classes/*</exclude-pattern>
+        <exclude-pattern>tests/Feature/apps/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Classes.ClassFileName.NoMatch">
+        <exclude-pattern>tests/Feature/classes/*/Schema/*</exclude-pattern>
+        <exclude-pattern>tests/Feature/apps/*/Schema/*</exclude-pattern>
+    </rule>
+</ruleset>
