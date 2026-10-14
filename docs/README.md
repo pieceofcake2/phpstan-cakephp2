@@ -78,7 +78,12 @@ The following features are added to PHPStan:
 - Treat `ClassRegistry::init($className)` as returning an instance of `$className` where
   possible, or `Model` when only a table for it is defined in a schema file. The class name
   can be in plugin syntax (`'Plugin.Model'`), or given as an array with a `class` key
-  (`['class' => 'Plugin.Model', 'alias' => 'Alias']`).
+  (`['class' => 'Plugin.Model', 'alias' => 'Alias']`). Other class names (e.g. a `string`
+  variable) resolve to `object`, as `init()` never returns false for a single class without
+  `$strict`: it creates an `AppModel` when the class does not exist. With `$strict = true`,
+  `init()` returns false when the class does not exist or is not a model, so only model classes
+  resolve to their instance, and anything else resolves to `object|false`. Lists of configurations, and values which may be
+  such lists (e.g. `mixed`), keep the declared `bool|object`.
 - Treat `$this->Components->load('Name')` as returning an instance of `NameComponent`.
 
 For example, PHPStan knows the types of all the properties and calls below:

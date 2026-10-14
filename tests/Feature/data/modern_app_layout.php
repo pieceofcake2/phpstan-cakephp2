@@ -17,5 +17,5 @@ assertType('Model', ClassRegistry::init('ModernArticle'));
 // Only the paths of the current layout are used.
 assertType('*ERROR*', $model->legacyAppMethod());
 assertType('*ERROR*', $model->behaviorMethod('a string!'));
-assertType('bool|object', ClassRegistry::init('LegacyArticle'));
-assertType('bool|object', ClassRegistry::init('TableWithoutModel'));
+assertType('object', ClassRegistry::init('LegacyArticle'));
+assertType('object', ClassRegistry::init('TableWithoutModel'));
