@@ -108,6 +108,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          coverage: none
+          tools: cs2pr
 
       - name: Composer get cache directory
         id: composer-cache
@@ -124,8 +126,13 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Run static type analysis
-        run: ./vendor/bin/phpstan
+      - name: Run PHPStan
+        id: phpstan
+        run: ./vendor/bin/phpstan analyse --no-progress --error-format=checkstyle > ./phpstan-report.xml
+
+      - name: Show PHPStan results in PR
+        if: ${{ always() && steps.phpstan.outcome == 'failure' }}
+        run: cs2pr ./phpstan-report.xml
 
   phpcs:
     runs-on: ubuntu-latest
