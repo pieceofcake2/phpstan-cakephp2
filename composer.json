@@ -23,6 +23,7 @@
             "PHPStanCakePHP2\\Test\\": "tests/"
         },
         "classmap": [
+            "tests/Feature/apps",
             "tests/Feature/classes",
             "vendor/pieceofcake2/cakephp/src/Cake/Cache",
             "vendor/pieceofcake2/cakephp/src/Cake/Config",
