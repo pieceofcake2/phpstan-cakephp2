@@ -12,6 +12,8 @@ class ShellExtensionsTest extends FeatureTestCase
     {
         yield 'existing_shell_model' => [__DIR__ . '/data/existing_shell_model.php'];
         yield 'existing_shell_task' => [__DIR__ . '/data/existing_shell_task.php'];
+        yield 'existing_shell_task_named_like_model' => [__DIR__ . '/data/existing_shell_task_named_like_model.php'];
+        yield 'existing_shell_property_tag' => [__DIR__ . '/data/existing_shell_property_tag.php'];
         yield 'invalid_shell_property' => [__DIR__ . '/data/invalid_shell_property.php'];
     }
 

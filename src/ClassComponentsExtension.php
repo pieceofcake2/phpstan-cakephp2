@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 namespace PHPStanCakePHP2;
 
-use PhpParser\Node\Expr\Array_;
-use PhpParser\Node\Expr\ClassConstFetch;
-use PhpParser\Node\Name\FullyQualified;
-use PhpParser\Node\Scalar\String_;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\PropertiesClassReflectionExtension;
 use PHPStan\Reflection\PropertyReflection;
@@ -35,12 +31,11 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
             return false;
         }
 
-        $isDefinedInComponentsProperty = (bool)array_filter(
-            $this->getDefinedComponentsAsList($classReflection),
-            static fn(string $componentName): bool => $componentName === $propertyName,
-        );
+        if (!in_array($propertyName, ClassDeclarationReader::getListedNames($classReflection, 'components'), true)) {
+            return false;
+        }
 
-        if (!$isDefinedInComponentsProperty) {
+        if (ClassDeclarationReader::hasPropertyTag($classReflection, $propertyName)) {
             return false;
         }
 
@@ -82,57 +77,5 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
     private function getClassNameFromPropertyName(string $propertyName): string
     {
         return str_contains($propertyName, 'Component') ? $propertyName : $propertyName . 'Component';
-    }
-
-    /**
-     * Returns the component name without its plugin prefix, e.g. `DebugKit.Toolbar` => `Toolbar`.
-     *
-     * @param string $componentName Component name, optionally in plugin syntax.
-     * @return string
-     */
-    private function removePluginPrefix(string $componentName): string
-    {
-        $position = strrpos($componentName, '.');
-
-        return $position === false ? $componentName : substr($componentName, $position + 1);
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function getDefinedComponentsAsList(ClassReflection $classReflection): array
-    {
-        $definedComponents = [];
-
-        foreach (array_merge([$classReflection], $classReflection->getParents()) as $class) {
-            if (!$class->hasProperty('components')) {
-                continue;
-            }
-
-            $defaultValue = $class->getNativeProperty('components')
-                ->getNativeReflection()
-                ->getDefaultValueExpression();
-
-            if (!$defaultValue instanceof Array_) {
-                continue;
-            }
-
-            foreach ($defaultValue->items as $item) {
-                // Components with settings are defined as `'Name' => [...settings]`.
-                $component = $item->key ?? $item->value;
-
-                if ($component instanceof String_) {
-                    $definedComponents[] = $this->removePluginPrefix($component->value);
-
-                    continue;
-                }
-
-                if ($component instanceof ClassConstFetch && $component->class instanceof FullyQualified) {
-                    $definedComponents[] = $component->class->toString();
-                }
-            }
-        }
-
-        return $definedComponents;
     }
 }

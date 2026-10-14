@@ -16,6 +16,7 @@ class ControllerExtensionsTest extends FeatureTestCase
         yield 'existing_controller_component_with_same_method_name_as_model' => [__DIR__ . '/data/existing_controller_component_with_same_method_name_as_model.php'];
         yield 'existing_controller_component_from_parent_controller' => [__DIR__ . '/data/existing_controller_component_from_parent_controller.php'];
         yield 'existing_controller_component_with_settings' => [__DIR__ . '/data/existing_controller_component_with_settings.php'];
+        yield 'existing_controller_property_tag' => [__DIR__ . '/data/existing_controller_property_tag.php'];
     }
 
     /**
