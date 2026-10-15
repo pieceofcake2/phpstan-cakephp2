@@ -16,7 +16,7 @@ properties, behavior methods called on models, and `ClassRegistry::init()`. It i
 
 Install the extension with [Composer](https://getcomposer.org/) as a development dependency:
 
-```shell
+```bash
 composer require --dev pieceofcake2/phpstan-cakephp2
 ```
 
@@ -116,7 +116,7 @@ of `basics.php`. They are loaded by `extension.neon`.
 
 ## Development
 
-```shell
+```bash
 composer install
 
 # Run the tests
