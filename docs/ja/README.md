@@ -80,7 +80,7 @@ PHPStan に次の機能が追加されます:
   `class` キーを持つ配列 (`['class' => 'Plugin.Model', 'alias' => 'Alias']`) でも指定できます。その他のクラス名
   (たとえば `string` 型の変数) は `object` になります。`$strict` なしで 1 つのクラスを指定した場合、`init()` が false を
   返すことはないからです (クラスが存在しなければ `AppModel` を作成します)。`$strict = true` の場合、`init()` はクラスが
-  存在しないかモデルでなければ false を返すので、自身のインスタンスになるのはモデルクラスだけで、それ以外は
+  存在しないかモデルでなければ false を返すので、そのクラスのインスタンスになるのはモデルクラスだけで、それ以外は
   `object|false` になります。設定のリストと、そうしたリストである可能性のある値 (たとえば `mixed`) は、宣言どおりの
   `bool|object` のままです。
 - `$this->Components->load('Name')` の戻り値を `NameComponent` のインスタンスとして扱います。
