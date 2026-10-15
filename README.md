@@ -13,6 +13,13 @@ of CakePHP 2: models, components and tasks loaded as properties, behavior method
 models, and `ClassRegistry::init()`. This is a fork of
 [sidz/phpstan-cakephp2](https://github.com/sidz/phpstan-cakephp2).
 
+## Documentation
+
+- Website: https://pieceofcake2.github.io/phpstan-cakephp2/
+- Markdown: [docs/README.md](docs/README.md) (for AI tools and offline reading)
+
+The Markdown documentation is also included in the Composer package, at `vendor/pieceofcake2/phpstan-cakephp2/docs/README.md`. Install the package with `--dev` if you only need it for development.
+
 ## Requirements
 
 - PHP 8.0+
@@ -32,10 +39,6 @@ Then include the extension in your PHPStan configuration:
 includes:
   - vendor/pieceofcake2/phpstan-cakephp2/extension.neon
 ```
-
-## Documentation
-
-Documentation: https://pieceofcake2.github.io/phpstan-cakephp2/
 
 ## Contributing
 
