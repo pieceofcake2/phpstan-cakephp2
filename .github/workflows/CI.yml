@@ -81,6 +81,15 @@ jobs:
       - name: Run Tests
         run: ./vendor/bin/phpunit --coverage-clover coverage.xml --log-junit junit.xml --colors=always
 
+      - name: Test summary
+        if: ${{ !cancelled() }}
+        uses: pieceofcake2/ci-summary@v1
+        with:
+          type: junit
+          title: PHPUnit — PHP ${{ matrix.php-version }}
+          file: junit.xml
+          coverage: coverage.xml
+
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v7
@@ -108,6 +117,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          coverage: none
+          tools: cs2pr
 
       - name: Composer get cache directory
         id: composer-cache
@@ -124,8 +135,21 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
 
-      - name: Run static type analysis
-        run: ./vendor/bin/phpstan
+      - name: Run PHPStan
+        id: phpstan
+        run: ./vendor/bin/phpstan analyse --no-progress --error-format=checkstyle > ./phpstan-report.xml
+
+      - name: Show PHPStan results in PR
+        if: ${{ always() && steps.phpstan.outcome == 'failure' }}
+        run: cs2pr ./phpstan-report.xml
+
+      - name: PHPStan summary
+        if: ${{ !cancelled() }}
+        uses: pieceofcake2/ci-summary@v1
+        with:
+          type: phpstan
+          title: PHPStan
+          file: phpstan-report.xml
 
   phpcs:
     runs-on: ubuntu-latest
@@ -162,3 +186,11 @@ jobs:
       - name: Show PHPCS results in PR
         if: ${{ always() && steps.phpcs.outcome == 'failure' }}
         run: cs2pr ./phpcs-report.xml
+
+      - name: PHPCS summary
+        if: ${{ !cancelled() }}
+        uses: pieceofcake2/ci-summary@v1
+        with:
+          type: checkstyle
+          title: PHPCS
+          file: phpcs-report.xml
