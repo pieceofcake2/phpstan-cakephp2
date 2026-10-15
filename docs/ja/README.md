@@ -140,8 +140,8 @@ vendor/bin/phpcbf
 ## 由来
 
 このパッケージは、[sidz/phpstan-cakephp2](https://github.com/sidz/phpstan-cakephp2) (Packagist では
-`sidz/phpstan-cakephp2`、最後のアップストリームのバージョンは 0.2.0) を保守しているフォークで、元々は Oleg Zhulnev
-によるものです。モダンな PHP で動く CakePHP 2 のために [pieceofcake2](https://github.com/pieceofcake2) が保守しています。
+`sidz/phpstan-cakephp2`、最後のアップストリームのバージョンは 0.2.0) をメンテナンスしているフォークで、元々は Oleg Zhulnev
+によるものです。モダンな PHP で動く CakePHP 2 のために [pieceofcake2](https://github.com/pieceofcake2) がメンテナンスしています。
 元のコードからの変更点は
 [フォーク以降のコミット履歴](https://github.com/pieceofcake2/phpstan-cakephp2/compare/21673aa...main)
 をご覧ください。
