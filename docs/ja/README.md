@@ -16,7 +16,7 @@ CakePHP 2 のマジックを PHPStan に教えます。[sidz/phpstan-cakephp2](h
 
 ## インストール
 
-[Composer](https://getcomposer.org/) で、開発用の依存パッケージとして拡張をインストールします:
+[Composer](https://getcomposer.org/) で、開発用の依存パッケージとして拡張をインストールします。
 
 ```bash
 composer require --dev pieceofcake2/phpstan-cakephp2
@@ -85,7 +85,7 @@ PHPStan に次の機能が追加されます:
   `bool|object` のままです。
 - `$this->Components->load('Name')` の戻り値を `NameComponent` のインスタンスとして扱います。
 
-たとえば PHPStan は、次のすべてのプロパティと呼び出しの型を把握します:
+たとえば PHPStan は、次のすべてのプロパティと呼び出しの型を把握します。
 
 ```php
 class PostsController extends AppController
@@ -144,4 +144,4 @@ vendor/bin/phpcbf
 によるものです。モダンな PHP で動く CakePHP 2 のために [pieceofcake2](https://github.com/pieceofcake2) が保守しています。
 元のコードからの変更点は
 [フォーク以降のコミット履歴](https://github.com/pieceofcake2/phpstan-cakephp2/compare/21673aa...main)
-を参照してください。
+をご覧ください。
