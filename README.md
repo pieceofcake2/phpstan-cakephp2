@@ -21,7 +21,7 @@ models, and `ClassRegistry::init()`. This is a fork of
 
 ## Installation
 
-```shell
+```bash
 composer require --dev pieceofcake2/phpstan-cakephp2
 ```
 
