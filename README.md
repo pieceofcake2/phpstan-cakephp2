@@ -44,6 +44,15 @@ includes:
 
 See the [contribution guidelines](https://github.com/pieceofcake2/.github/blob/master/CONTRIBUTING.md).
 
+## Origin
+
+This package is a maintained fork of
+[sidz/phpstan-cakephp2](https://github.com/sidz/phpstan-cakephp2) (`sidz/phpstan-cakephp2` on
+Packagist, last upstream version 0.2.0), originally by Oleg Zhulnev. It is maintained for CakePHP 2
+on modern PHP by [pieceofcake2](https://github.com/pieceofcake2). Changes from the original are
+listed in the
+[commit history since the fork](https://github.com/pieceofcake2/phpstan-cakephp2/compare/21673aa...main).
+
 ## License
 
 Licensed under the MIT License. See [LICENSE](LICENSE).
