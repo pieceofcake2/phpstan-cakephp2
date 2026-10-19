@@ -10,7 +10,7 @@ use PHPStan\Reflection\ReflectionProvider;
 
 abstract class ClassPropertiesExtension implements PropertiesClassReflectionExtension
 {
-    private ReflectionProvider $reflectionProvider;
+    protected ReflectionProvider $reflectionProvider;
 
     /**
      * Constructor.
@@ -29,7 +29,7 @@ abstract class ClassPropertiesExtension implements PropertiesClassReflectionExte
         ClassReflection $classReflection,
         string $propertyName,
     ): bool {
-        if (!array_filter($this->getContainingClassNames(), [$classReflection, 'is'])) {
+        if (!CakeClassName::isAnyOf($this->reflectionProvider, $classReflection, $this->getContainingClassNames())) {
             return false;
         }
 
@@ -42,8 +42,11 @@ abstract class ClassPropertiesExtension implements PropertiesClassReflectionExte
         $propertyClassName = $this->getClassNameFromPropertyName($propertyName);
 
         return $this->reflectionProvider->hasClass($propertyClassName)
-            && $this->reflectionProvider->getClass($propertyClassName)
-                ->is($this->getPropertyParentClassName());
+            && CakeClassName::is(
+                $this->reflectionProvider,
+                $this->reflectionProvider->getClass($propertyClassName),
+                $this->getPropertyParentClassName(),
+            );
     }
 
     /**

@@ -42,10 +42,10 @@ final class ClassReflectionFinder
 
         return array_filter(
             $classReflections,
-            static function (
+            function (
                 ClassReflection $classReflection,
             ) use ($isA) {
-                return $classReflection->is($isA);
+                return CakeClassName::is($this->reflectionProvider, $classReflection, $isA);
             },
         );
     }
