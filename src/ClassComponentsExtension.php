@@ -27,7 +27,7 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
      */
     public function hasProperty(ClassReflection $classReflection, string $propertyName): bool
     {
-        if (!array_filter($this->getContainingClassNames(), [$classReflection, 'is'])) {
+        if (!CakeClassName::isAnyOf($this->reflectionProvider, $classReflection, $this->getContainingClassNames())) {
             return false;
         }
 
@@ -42,8 +42,11 @@ final class ClassComponentsExtension implements PropertiesClassReflectionExtensi
         $propertyClassName = $this->getClassNameFromPropertyName($propertyName);
 
         return $this->reflectionProvider->hasClass($propertyClassName)
-            && $this->reflectionProvider->getClass($propertyClassName)
-                ->is('Component');
+            && CakeClassName::is(
+                $this->reflectionProvider,
+                $this->reflectionProvider->getClass($propertyClassName),
+                'Component',
+            );
     }
 
     /**

@@ -44,7 +44,7 @@ final class ModelBehaviorsExtension implements MethodsClassReflectionExtension
         ClassReflection $classReflection,
         string $methodName,
     ): bool {
-        return $classReflection->is('Model')
+        return CakeClassName::is($this->reflectionProvider, $classReflection, 'Model')
             && in_array(
                 $methodName,
                 array_map(
@@ -95,8 +95,10 @@ final class ModelBehaviorsExtension implements MethodsClassReflectionExtension
             );
             $this->behaviorMethods = [];
             foreach ($classReflections as $classReflection) {
-                $modelBehaviorMethodExtractor =
-                    new ModelBehaviorMethodExtractor($classReflection);
+                $modelBehaviorMethodExtractor = new ModelBehaviorMethodExtractor(
+                    $classReflection,
+                    CakeClassName::resolve($this->reflectionProvider, 'Model'),
+                );
                 $this->behaviorMethods = array_merge(
                     $this->behaviorMethods,
                     $modelBehaviorMethodExtractor->getModelBehaviorMethods(),

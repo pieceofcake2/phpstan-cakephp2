@@ -33,7 +33,7 @@ class LoadComponentOnFlyMethodReturnTypeExtension implements DynamicMethodReturn
      */
     public function getClass(): string
     {
-        return ComponentCollection::class;
+        return $this->reflectionProvider->getClass(ComponentCollection::class)->getName();
     }
 
     /**
@@ -68,7 +68,8 @@ class LoadComponentOnFlyMethodReturnTypeExtension implements DynamicMethodReturn
             return null;
         }
 
-        if (!$this->reflectionProvider->getClass($componentName)->is(Component::class)) {
+        $componentReflection = $this->reflectionProvider->getClass($componentName);
+        if (!CakeClassName::is($this->reflectionProvider, $componentReflection, Component::class)) {
             return null;
         }
 

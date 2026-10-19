@@ -66,7 +66,7 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
      */
     public function getClass(): string
     {
-        return 'ClassRegistry';
+        return $this->reflectionProvider->getClass('ClassRegistry')->getName();
     }
 
     /**
@@ -189,7 +189,7 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
             if ($this->reflectionProvider->hasClass($className)) {
                 $types[] = $this->resolveObject(new ObjectType($className), $strict);
             } elseif (!$strict && $this->schemaService->hasTable(Inflector::tableize($className))) {
-                $types[] = new ObjectType('Model');
+                $types[] = new ObjectType(CakeClassName::resolve($this->reflectionProvider, 'Model'));
             } else {
                 $types[] = $this->getUnresolvedType($strict);
             }
@@ -207,7 +207,8 @@ class ClassRegistryInitExtension implements DynamicStaticMethodReturnTypeExtensi
      */
     private function resolveObject(Type $objectType, bool $strict): Type
     {
-        if (!$strict || (new ObjectType('Model'))->isSuperTypeOf($objectType)->yes()) {
+        $modelType = new ObjectType(CakeClassName::resolve($this->reflectionProvider, 'Model'));
+        if (!$strict || $modelType->isSuperTypeOf($objectType)->yes()) {
             return $objectType;
         }
 

@@ -14,14 +14,18 @@ final class ModelBehaviorMethodExtractor
 {
     private ClassReflection $classReflection;
 
+    private string $modelClassName;
+
     /**
      * Constructor.
      *
      * @param \PHPStan\Reflection\ClassReflection $classReflection Behavior class reflection.
+     * @param string $modelClassName Declared name of the `Model` class.
      */
-    public function __construct(ClassReflection $classReflection)
+    public function __construct(ClassReflection $classReflection, string $modelClassName = 'Model')
     {
         $this->classReflection = $classReflection;
+        $this->modelClassName = $modelClassName;
     }
 
     /**
@@ -96,7 +100,7 @@ final class ModelBehaviorMethodExtractor
 
         if (
             $firstParameter->getType()
-                ->isSuperTypeOf(new ObjectType('Model'))
+                ->isSuperTypeOf(new ObjectType($this->modelClassName))
                 ->no()
         ) {
             return false;

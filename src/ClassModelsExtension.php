@@ -20,7 +20,7 @@ final class ClassModelsExtension extends ClassPropertiesExtension
         // A task listed in the `$tasks` of a shell or task, e.g. the `Model` task of bake, takes precedence
         // over a model of the same name.
         if (
-            $classReflection->is('Shell')
+            CakeClassName::is($this->reflectionProvider, $classReflection, 'Shell')
             && in_array($propertyName, ClassDeclarationReader::getListedNames($classReflection, 'tasks'), true)
         ) {
             return false;
